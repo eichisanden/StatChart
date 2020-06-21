@@ -12,9 +12,12 @@ import java.util.List;
 
 public class VmStat {
 
-    public static final String VMSTAT_TXT = "src/main/resources/vmstat.txt";
-
     public static void main(String[] args) throws Exception {
+        if (args.length < 1) {
+            return;
+        }
+        String targetFile = args[0];
+
         XYChart chartProcs = new XYChartBuilder().title("procs").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("number of process").build();
         XYChart chartMemory = new XYChartBuilder().title("memory").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("Mbytes").build();
         XYChart chartSwap = new XYChartBuilder().title("swap").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("KB/s").build();
@@ -53,7 +56,7 @@ public class VmStat {
         List<Integer> st2 = new ArrayList<>();
         int index = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(VMSTAT_TXT)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(targetFile)))) {
 
             String line = reader.readLine();
             while (line != null) {
@@ -125,6 +128,6 @@ public class VmStat {
         chartCpu2.addSeries("sys", time, sys2).setMarker(SeriesMarkers.NONE);
         chartCpu2.addSeries("usr", time, usr2).setMarker(SeriesMarkers.NONE);
 
-        new SwingWrapper<Chart>(Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu2)).displayChartMatrix();
+        new SwingWrapper<>(Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu2)).displayChartMatrix();
     }
 }
