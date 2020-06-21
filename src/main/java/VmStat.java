@@ -26,10 +26,7 @@ public class VmStat {
         XYChart chartCpu = new XYChartBuilder().title("cpu").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("percentage").build();
         chartCpu.getStyler().setYAxisMax(100d);
         chartCpu.getStyler().setYAxisMin(0d);
-        XYChart chartCpu2 = new XYChartBuilder().title("cpu").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("percentage").build();
-        chartCpu2.getStyler().setYAxisMax(100d);
-        chartCpu2.getStyler().setYAxisMin(0d);
-        chartCpu2.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
+        chartCpu.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
 
         List<Integer> time = new ArrayList<>();
         List<Integer> r = new ArrayList<>();
@@ -46,14 +43,8 @@ public class VmStat {
         List<Integer> cs = new ArrayList<>();
         List<Integer> usr = new ArrayList<>();
         List<Integer> sys = new ArrayList<>();
-        List<Integer> idle = new ArrayList<>();
         List<Integer> wait = new ArrayList<>();
         List<Integer> st = new ArrayList<>();
-
-        List<Integer> usr2 = new ArrayList<>();
-        List<Integer> sys2 = new ArrayList<>();
-        List<Integer> wait2 = new ArrayList<>();
-        List<Integer> st2 = new ArrayList<>();
         int index = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(targetFile)))) {
@@ -85,21 +76,15 @@ public class VmStat {
                 bo.add(Integer.parseInt(items[9]));
                 in.add(Integer.parseInt(items[10]));
                 cs.add(Integer.parseInt(items[11]));
-                usr.add(Integer.parseInt(items[12]));
-                sys.add(Integer.parseInt(items[13]));
-                idle.add(Integer.parseInt(items[14]));
-                wait.add(Integer.parseInt(items[15]));
-                st.add(Integer.parseInt(items[16]));
 
                 int iUsr = Integer.parseInt(items[12]);
                 int iSys = Integer.parseInt(items[13]);
-                int iIdle = Integer.parseInt(items[14]);
                 int iWait = Integer.parseInt(items[15]);
                 int iSt = Integer.parseInt(items[16]);
-                usr2.add(iUsr);
-                sys2.add(iUsr + iSys);
-                wait2.add(iUsr + iSys + iWait);
-                st2.add(iUsr + iSys + iWait + iSt);
+                usr.add(iUsr);
+                sys.add(iUsr + iSys);
+                wait.add(iUsr + iSys + iWait);
+                st.add(iUsr + iSys + iWait + iSt);
 
                 time.add(index++);
             }
@@ -107,7 +92,7 @@ public class VmStat {
 
         chartProcs.addSeries("r", time, r).setMarker(SeriesMarkers.NONE);
         chartProcs.addSeries("b", time, b).setMarker(SeriesMarkers.NONE);
-        chartMemory.addSeries("swapd", time, swapd).setMarker(SeriesMarkers.NONE);
+        chartMemory.addSeries("swpd", time, swapd).setMarker(SeriesMarkers.NONE);
         chartMemory.addSeries("free", time, free).setMarker(SeriesMarkers.NONE);
         chartMemory.addSeries("buff", time, buff).setMarker(SeriesMarkers.NONE);
         chartMemory.addSeries("cache", time, cache).setMarker(SeriesMarkers.NONE);
@@ -117,17 +102,11 @@ public class VmStat {
         chartIo.addSeries("bo", time, bo).setMarker(SeriesMarkers.NONE);
         chartSystem.addSeries("in", time, in).setMarker(SeriesMarkers.NONE);
         chartSystem.addSeries("cs", time, cs).setMarker(SeriesMarkers.NONE);
-        chartCpu.addSeries("usr", time, usr).setMarker(SeriesMarkers.NONE);
-        chartCpu.addSeries("sys", time, sys).setMarker(SeriesMarkers.NONE);
-        chartCpu.addSeries("idle", time, idle).setMarker(SeriesMarkers.NONE);
-        chartCpu.addSeries("wait", time, wait).setMarker(SeriesMarkers.NONE);
         chartCpu.addSeries("st", time, st).setMarker(SeriesMarkers.NONE);
+        chartCpu.addSeries("wait", time, wait).setMarker(SeriesMarkers.NONE);
+        chartCpu.addSeries("sys", time, sys).setMarker(SeriesMarkers.NONE);
+        chartCpu.addSeries("usr", time, usr).setMarker(SeriesMarkers.NONE);
 
-        chartCpu2.addSeries("st", time, st2).setMarker(SeriesMarkers.NONE);
-        chartCpu2.addSeries("wait", time, wait2).setMarker(SeriesMarkers.NONE);
-        chartCpu2.addSeries("sys", time, sys2).setMarker(SeriesMarkers.NONE);
-        chartCpu2.addSeries("usr", time, usr2).setMarker(SeriesMarkers.NONE);
-
-        new SwingWrapper<>(Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu2)).displayChartMatrix();
+        new SwingWrapper<>(Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu)).displayChartMatrix();
     }
 }
