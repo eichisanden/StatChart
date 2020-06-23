@@ -1,5 +1,7 @@
-import org.knowm.xchart.*;
-import org.knowm.xchart.internal.chartpart.Chart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
@@ -12,11 +14,7 @@ import java.util.List;
 
 public class VmStat {
 
-    public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            return;
-        }
-        String targetFile = args[0];
+    public static List<XYChart> getCharts(File file) throws Exception {
 
         XYChart chartProcs = new XYChartBuilder().title("procs").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("number of process").build();
         XYChart chartMemory = new XYChartBuilder().title("memory").theme(Styler.ChartTheme.Matlab).xAxisTitle("time").yAxisTitle("Mbytes").build();
@@ -47,7 +45,7 @@ public class VmStat {
         List<Integer> st = new ArrayList<>();
         int index = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(targetFile)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
             String line = reader.readLine();
             while (line != null) {
@@ -107,6 +105,6 @@ public class VmStat {
         chartCpu.addSeries("sys", time, sys).setMarker(SeriesMarkers.NONE);
         chartCpu.addSeries("usr", time, usr).setMarker(SeriesMarkers.NONE);
 
-        new SwingWrapper<>(Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu)).displayChartMatrix();
+        return Arrays.asList(chartProcs, chartMemory, chartSwap, chartIo, chartSystem, chartCpu);
     }
 }

@@ -30,8 +30,10 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
 - execute
 
 ```
-$ java -jar build/libs/StatChart-0.1-all.jar /path/to/vmstat.txt 
+$ java -jar build/libs/StatChart-0.1-all.jar
 ```
+
+File -> Open 
 
 ![](image.png)
 
